@@ -1,43 +1,47 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Livre{% endblock %}
+{% block title %}Détails du Livre{% endblock %}
 
 {% block body %}
-    <h1>Livre</h1>
+<div class="container mt-5">
+    <h1 class="mb-4 text-primary">{{ livre.titre }}</h1>
 
-    <table class="table">
-    <tbody>
-        <tr>
-            <th>Id</th>
-            <td>{{ livre.id }}</td>
-        </tr>
-        <tr>
-            <th>Titre</th>
-            <td>{{ livre.titre }}</td>
-        </tr>
-        <tr>
-            <th>ISBN</th>
-            <td>{{ livre.ISBN }}</td>
-        </tr>
-        <tr>
-            <th>Disponible</th>
-            <td>{{ livre.disponible ? 'Yes' : 'No' }}</td>
-        </tr>
-        <tr>
-            <th>Auteur</th>
-            <td>{{ livre.auteur ? livre.auteur.nom : 'Auteur inconnu' }}</td>
-        </tr>
-        <tr>
-            <th>Genre</th>
-            <td>{{ livre.genre ? livre.genre.nom : 'Genre inconnu' }}</td>
-        </tr>
-    </tbody>
-</table>
+    <div class="row">
+        <div class="col-md-8">
+            <p><strong>Auteur :</strong> {{ livre.auteur.nom }}</p>
+            <p><strong>Genre :</strong> {{ livre.genre.nom }}</p>
+            <p><strong>ISBN :</strong> {{ livre.ISBN }}</p>
+            <p><strong>Description :</strong></p>
+            <p>{{ livre.description }}</p>
 
+            {% if app.user %}
+                <a href="{{ path('app_emprunt_livre', {'id': livre.id}) }}" class="btn btn-outline-primary mt-3">
+                    <i class="bi bi-bookmark-plus"></i> Emprunter
+                </a>
+            {% else %}
+                <div class="alert alert-info mt-3">Connectez-vous pour pouvoir emprunter ce livre.</div>
+            {% endif %}
+        </div>
+    </div>
 
-    <a href="{{ path('app_livre_index') }}">back to list</a>
+    <hr>
 
-    <a href="{{ path('app_livre_edit', {'id': livre.id}) }}">edit</a>
+    <div class="mt-5">
+        <h4>📝 Critiques des Utilisateurs</h4>
 
-    {{ include('livre/_delete_form.html.twig') }}
+        {% if livre.critiques is not empty %}
+            <ul class="list-group">
+                {% for critique in livre.critiques %}
+                    <li class="list-group-item">
+                        <strong>{{ critique.utilisateur.nom }}</strong> : 
+                        {{ critique.contenu }}
+                        <span class="text-muted float-end">{{ critique.date|date('d/m/Y') }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="alert alert-secondary mt-2">Aucune critique pour ce livre pour le moment.</div>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}

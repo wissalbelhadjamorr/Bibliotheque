@@ -16,18 +16,28 @@ final class LivreController extends AbstractController
 {
     #[Route(name: 'app_livre_index', methods: ['GET'])]
     public function index(Request $request, LivreRepository $livreRepository): Response
-    {
-        $titre = $request->query->get('titre');
-        $auteur = $request->query->get('Auteur');
-        dump($titre, $auteur); // Affiche les filtres dans le débogueur
-
-        // Recherche des livres en fonction des filtres
-        $livres = $livreRepository->findByFilters($titre, $auteur);
+{
+    // Récupérer les valeurs des paramètres de recherche
+    $titre = $request->query->get('titre');
+    $auteur = $request->query->get('auteur');
     
-        return $this->render('livre/index.html.twig', [
-            'livres' => $livres,
-        ]);
-    }
+    // Appliquer la méthode de recherche avec titre et auteur
+    $livres = $livreRepository->findByFilters($titre, $auteur);
+    
+    return $this->render('livre/index.html.twig', [
+        'livres' => $livres,
+    ]);
+}
+
+#[Route('/{id}/emprunter', name: 'app_emprunt_livre')]
+public function emprunter(Livre $livre, EntityManagerInterface $em): Response
+{
+    // logique d'emprunt ici...
+
+    $this->addFlash('success', 'Livre emprunté avec succès !');
+    return $this->redirectToRoute('app_livre_show', ['id' => $livre->getId()]);
+}
+
     
 
     #[Route('/new', name: 'app_livre_new', methods: ['GET', 'POST'])]
@@ -103,4 +113,17 @@ final class LivreController extends AbstractController
     return $queryBuilder->getQuery()->getResult();
 }
 
+    /**
+     * @Route("/livre/{id}", name="app_livre_detail")
+     */
+    public function detail(Livre $livre): Response
+    {
+        if (!$livre) {
+            throw $this->createNotFoundException('Le livre n\'a pas été trouvé.');
+        }
+
+        return $this->render('livre/detail.html.twig', [
+            'livre' => $livre,
+        ]);
+    }
 }

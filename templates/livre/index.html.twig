@@ -12,59 +12,77 @@
     </div>
 
     <!-- Formulaire de filtre -->
-    <form method="get" action="{{ path('app_livre_index') }} "class="mb-4">
-        <div class="row">
-            <div class="col-md-4">
-                <input type="text" class="form-control" name="titre" placeholder="Titre" value="{{ app.request.query.get('titre') }}">
-            </div>
-            <div class="col-md-4">
-                <input type="text" name="auteur" class="form-control" placeholder="Filtrer par auteur" value="{{ app.request.query.get('auteur') }}">
-            </div>
-            <div class="col-md-4">
-                <button type="submit" class="btn btn-primary w-100">Filtrer</button>
-            </div>
-        </div>
-    </form>
+<form method="get" class="row mb-4">
+    <div class="col-md-5">
+        <input type="text" name="titre" value="{{ app.request.get('titre') }}" class="form-control" placeholder="Rechercher par titre">
+    </div>
+    <div class="col-md-5">
+        <input type="text" name="auteur" value="{{ app.request.get('auteur') }}" class="form-control" placeholder="Rechercher par auteur">
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">
+            <i class="bi bi-search"></i> Rechercher
+        </button>
+    </div>
+</form>
 
-    {% if livres is not empty %}
-        <div class="table-responsive">
-            <table class="table table-hover table-bordered align-middle">
-                <thead class="table-dark text-center">
+
+
+   {% if livres is not empty %}
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="table-dark text-center">
+                <tr>
+                    <th scope="col">ID</th> <!-- Nouvelle colonne -->
+                    <th scope="col">Titre</th>
+                    <th scope="col">Auteur</th>
+                    <th scope="col">Genre</th>
+                    <th scope="col">ISBN</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for livre in livres %}
                     <tr>
-                        <th scope="col">Titre</th>
-                        <th scope="col">Auteur</th>
-                        <th scope="col">Genre</th>
-                        <th scope="col">ISBN</th>
-                        <th scope="col">Actions</th>
+                        <td class="text-center">{{ livre.id }}</td> <!-- Affichage de l'ID -->
+                        <td>{{ livre.titre }}</td>
+                        <td>{{ livre.auteur.nom }}</td>
+                        <td>{{ livre.genre.nom }}</td>
+                        <td>{{ livre.ISBN }}</td>
+                        <td class="text-center">
+                            <a href="{{ path('app_livre_edit', {'id': livre.id}) }}" class="btn btn-sm btn-outline-warning me-1">
+                                <i class="bi bi-pencil-square"></i> Modifier
+                            </a>
+                            <form method="post" action="{{ path('app_livre_delete', {'id': livre.id}) }}" style="display:inline-block;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ livre.id) }}">
+                                <button class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash3"></i> Supprimer
+                                </button>
+                            </form>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    {% for livre in livres %}
-                        <tr>
-                            <td>{{ livre.titre }}</td>
-                            <td>{{ livre.auteur.nom }}</td>
-                            <td>{{ livre.genre.nom }}</td>
-                            <td>{{ livre.ISBN }}</td>
-                            <td class="text-center">
-                                <a href="{{ path('app_livre_edit', {'id': livre.id}) }}" class="btn btn-sm btn-outline-warning me-1">
-                                    <i class="bi bi-pencil-square"></i> Modifier
-                                </a>
-                                <form method="post" action="{{ path('app_livre_delete', {'id': livre.id}) }}" style="display:inline-block;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?');">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ livre.id) }}">
-                                    <button class="btn btn-sm btn-outline-danger">
-                                        <i class="bi bi-trash3"></i> Supprimer
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    {% else %}
-        <div class="alert alert-info text-center">
-            Aucun livre trouvé pour le moment.
-        </div>
-    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="alert alert-info text-center">
+        Aucun livre trouvé pour le moment.
+    </div>
+{% endif %}
+{% if livre.critiques is not empty %}
+    <ul class="list-group">
+        {% for critique in livre.critiques %}
+            <li class="list-group-item">
+                <strong>{{ critique.utilisateur.nom }}</strong> : 
+                {{ critique.contenu }}
+                <span class="text-muted float-end">{{ critique.date|date('d/m/Y') }}</span>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <div class="alert alert-secondary mt-2">Aucune critique pour ce livre pour le moment.</div>
+{% endif %}
+
 </div>
 {% endblock %}

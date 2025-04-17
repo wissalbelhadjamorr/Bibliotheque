@@ -26,7 +26,7 @@ class Livre
     private ?bool $disponible = null;
 
     #[ORM\ManyToOne(inversedBy: 'livres')]
-    private ?Auteur $Auteur = null;
+    private ?Auteur $auteur = null;
 
     #[ORM\ManyToOne(inversedBy: 'livres')]
     private ?Genre $genre = null;
@@ -36,12 +36,51 @@ class Livre
      */
     #[ORM\OneToMany(targetEntity: Emprunt::class, mappedBy: 'livre')]
     private Collection $emprunt;
+        /**
+
+    * @ORM\Column(type="string", length=255, nullable=true)
+    */
+   private $description;
+   
+    /**
+     * @var Collection<int, Critique>
+     * @ORM\OneToMany(targetEntity="App\Entity\Critique", mappedBy="livre")
+     */
+    private Collection $critiques;
+
 
     public function __construct()
     {
         $this->emprunt = new ArrayCollection();
+        $this->critiques = new ArrayCollection();  // Initialisation de la collection de critiques
+
+    }
+    
+    public function getCritiques(): Collection
+    {
+        return $this->critiques;
     }
 
+    public function addCritique(Critique $critique): self
+    {
+        if (!$this->critiques->contains($critique)) {
+            $this->critiques[] = $critique;
+            $critique->setLivre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCritique(Critique $critique): self
+    {
+        if ($this->critiques->removeElement($critique)) {
+            if ($critique->getLivre() === $this) {
+                $critique->setLivre(null);
+            }
+        }
+
+        return $this;
+    }
     public function getId(): ?int
     {
         return $this->id;
@@ -85,15 +124,16 @@ class Livre
 
     public function getAuteur(): ?Auteur
     {
-        return $this->Auteur;
+        return $this->auteur;
     }
-
-    public function setAuteur(?Auteur $Auteur): static
+    
+    public function setAuteur(?Auteur $auteur): static
     {
-        $this->Auteur = $Auteur;
-
+        $this->auteur = $auteur;
+    
         return $this;
     }
+    
 
     public function getGenre(): ?genre
     {
@@ -106,7 +146,17 @@ class Livre
 
         return $this;
     }
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
 
+    // Setter
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+        return $this;
+    }
     /**
      * @return Collection<int, Emprunt>
      */
