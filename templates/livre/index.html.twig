@@ -49,7 +49,10 @@
                         <td>{{ livre.auteur.nom }}</td>
                         <td>{{ livre.genre.nom }}</td>
                         <td>{{ livre.ISBN }}</td>
-                        <td class="text-center">
+                       <td class="text-center">
+                            <a href="{{ path('app_livre_show', {'id': livre.id}) }}" class="btn btn-sm btn-outline-info me-1">
+                                <i class="bi bi-eye"></i> Voir
+                            </a>
                             <a href="{{ path('app_livre_edit', {'id': livre.id}) }}" class="btn btn-sm btn-outline-warning me-1">
                                 <i class="bi bi-pencil-square"></i> Modifier
                             </a>
@@ -60,6 +63,7 @@
                                 </button>
                             </form>
                         </td>
+
                     </tr>
                 {% endfor %}
             </tbody>
@@ -69,19 +73,6 @@
     <div class="alert alert-info text-center">
         Aucun livre trouvé pour le moment.
     </div>
-{% endif %}
-{% if livre.critiques is not empty %}
-    <ul class="list-group">
-        {% for critique in livre.critiques %}
-            <li class="list-group-item">
-                <strong>{{ critique.utilisateur.nom }}</strong> : 
-                {{ critique.contenu }}
-                <span class="text-muted float-end">{{ critique.date|date('d/m/Y') }}</span>
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <div class="alert alert-secondary mt-2">Aucune critique pour ce livre pour le moment.</div>
 {% endif %}
 
 </div>

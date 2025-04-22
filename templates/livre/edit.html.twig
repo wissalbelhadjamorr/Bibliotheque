@@ -1,13 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Livre{% endblock %}
+{% block title %}Modifier un Livre{% endblock %}
 
 {% block body %}
-    <h1>Edit Livre</h1>
+<div class="container mt-5">
+    <h1 class="mb-4">Modifier un Livre</h1>
 
-    {{ include('livre/_form.html.twig', {'button_label': 'Update'}) }}
+    <div class="card mb-4">
+        <div class="card-body">
+            {{ include('livre/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+        </div>
+    </div>
 
-    <a href="{{ path('app_livre_index') }}">back to list</a>
+    <div class="d-flex justify-content-between">
+        <a href="{{ path('app_livre_index') }}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Retour à la liste
+        </a>
 
-    {{ include('livre/_delete_form.html.twig') }}
+        {{ include('livre/_delete_form.html.twig') }}
+    </div>
+</div>
 {% endblock %}

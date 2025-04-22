@@ -19,6 +19,11 @@
     </head>
 
     <body>
-        {% block body %}{% endblock %}
+        {% block body %}{% for flash_error in app.flashes('error') %}
+    <div class="alert alert-danger">
+        {{ flash_error }}
+    </div>
+{% endfor %}
+{% endblock %}
     </body>
 </html>

@@ -11,10 +11,10 @@ class Critique
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type="text")]
+    #[ORM\Column(type: "text")]
     private ?string $contenu = null;
 
-    #[ORM\Column(type="datetime")]
+    #[ORM\Column(type: "datetime")]
     private \DateTime $date;
 
     #[ORM\ManyToOne(targetEntity: Livre::class, inversedBy: 'critiques')]

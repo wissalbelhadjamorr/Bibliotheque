@@ -24,24 +24,5 @@
         </div>
     </div>
 
-    <hr>
-
-    <div class="mt-5">
-        <h4>📝 Critiques des Utilisateurs</h4>
-
-        {% if livre.critiques is not empty %}
-            <ul class="list-group">
-                {% for critique in livre.critiques %}
-                    <li class="list-group-item">
-                        <strong>{{ critique.utilisateur.nom }}</strong> : 
-                        {{ critique.contenu }}
-                        <span class="text-muted float-end">{{ critique.date|date('d/m/Y') }}</span>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <div class="alert alert-secondary mt-2">Aucune critique pour ce livre pour le moment.</div>
-        {% endif %}
-    </div>
 </div>
 {% endblock %}
