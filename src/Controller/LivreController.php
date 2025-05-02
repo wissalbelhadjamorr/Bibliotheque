@@ -96,22 +96,7 @@ public function emprunter(Livre $livre, EntityManagerInterface $em): Response
 
         return $this->redirectToRoute('app_livre_index', [], Response::HTTP_SEE_OTHER);
     }
-    public function findByFilters(?string $titre, ?string $auteur): array
-{
-    $queryBuilder = $this->createQueryBuilder('l');
-
-    if ($titre) {
-        $queryBuilder->andWhere('l.titre LIKE :titre')
-                     ->setParameter('titre', '%' . $titre . '%');
-    }
-
-    if ($auteur) {
-        $queryBuilder->andWhere('l.auteur LIKE :auteur')
-                     ->setParameter('auteur', '%' . $auteur . '%');
-    }
-
-    return $queryBuilder->getQuery()->getResult();
-}
+// Removed findByFilters method from the controller.
 
     /**
      * @Route("/livre/{id}", name="app_livre_detail")
