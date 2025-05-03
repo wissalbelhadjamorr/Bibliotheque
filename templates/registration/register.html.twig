@@ -1,29 +1,129 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Inscription</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .btn-rose {
+            background-color: #ff2aa0;
+            border-color: #ff2aa0;
+            color: white;
+        }
+        .btn-rose:hover {
+            background-color: #e0218c;
+            border-color: #e0218c;
+        }
+        body {
+            background-color: #f8f9fa;
+        }
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+        .form-floating > .form-control:not(:placeholder-shown) ~ label,
+        .form-floating > .form-control:focus ~ label,
+        .form-floating > .form-select ~ label {
+            opacity: 1;
+            transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+        }
+    </style>
+</head>
+<body class="bg-light">
+    {% if app.user %}
+        {% set redirect_url = path('app_home') %}
+        <script>
+            window.location.href = "{{ redirect_url }}";
+        </script>
+    {% endif %}
 
-{% block title %}Register{% endblock %}
+    <div class="container mt-5 form-container">
+        <form method="post" class="border p-4 rounded shadow-sm bg-white">
+            <h1 class="h3 mb-4 text-center">Inscription</h1>
 
-{% block body %}
-    {% for flash_error in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
+            {{ form_errors(registrationForm) }}
+            {{ form_start(registrationForm) }}
 
-    <h1>Register</h1>
+            <!-- Email -->
+            <div class="form-floating mb-3">
+                {{ form_widget(registrationForm.email, {
+                    'attr': {
+                        'class': 'form-control',
+                        'placeholder': ' ',
+                        'id': 'email'
+                    }
+                }) }}
+                {{ form_label(registrationForm.email, 'Adresse email', {
+                    'label_attr': {'for': 'email'}
+                }) }}
+                {{ form_errors(registrationForm.email) }}
+            </div>
 
-    {{ form_errors(registrationForm) }}
+            <!-- Mot de passe -->
+            <div class="form-floating mb-3">
+                {{ form_widget(registrationForm.plainPassword, {
+                    'attr': {
+                        'class': 'form-control',
+                        'placeholder': ' ',
+                        'id': 'plainPassword'
+                    }
+                }) }}
+                {{ form_label(registrationForm.plainPassword, 'Mot de passe', {
+                    'label_attr': {'for': 'plainPassword'}
+                }) }}
+                {{ form_errors(registrationForm.plainPassword) }}
+            </div>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.nom, {
-            label: 'Nom'
-        }) }}
-        {{ form_row(registrationForm.telephone, {
-            label: 'Telephone'
-        }) }}
+            <!-- Nom -->
+            <div class="form-floating mb-3">
+                {{ form_widget(registrationForm.nom, {
+                    'attr': {
+                        'class': 'form-control',
+                        'placeholder': ' ',
+                        'id': 'nom'
+                    }
+                }) }}
+                {{ form_label(registrationForm.nom, 'Nom complet', {
+                    'label_attr': {'for': 'nom'}
+                }) }}
+                {{ form_errors(registrationForm.nom) }}
+            </div>
 
+            <!-- Téléphone -->
+            <div class="form-floating mb-3">
+                {{ form_widget(registrationForm.telephone, {
+                    'attr': {
+                        'class': 'form-control',
+                        'placeholder': ' ',
+                        'id': 'telephone'
+                    }
+                }) }}
+                {{ form_label(registrationForm.telephone, 'Téléphone', {
+                    'label_attr': {'for': 'telephone'}
+                }) }}
+                {{ form_errors(registrationForm.telephone) }}
+            </div>
 
-        <button type="submit" class="btn btn-primary">Register</button>
-    {{ form_end(registrationForm) }}
-{% endblock %}
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+            <button type="submit" class="btn btn-rose w-100 py-2">S'inscrire</button>
+
+            <div class="text-center mt-3">
+                <a href="{{ path('app_login') }}" class="text-decoration-none text-muted">
+                    Déjà un compte ? <span class="text-rose">Se connecter</span>
+                </a>
+            </div>
+
+            {{ form_end(registrationForm) }}
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .text-rose { color: #ff2aa0; }
+        .text-rose:hover { color: #e0218c; }
+    </style>
+</body>
+</html>

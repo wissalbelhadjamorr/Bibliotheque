@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
@@ -29,10 +30,13 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $telephone = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $password = null; // 🔥 ajout du mot de passe
+    private ?string $password = null;
 
     #[ORM\Column(type: 'json')]
-    private array $roles = []; // 🔥 ajout des rôles
+    private array $roles = [];
+
+    #[ORM\Column]
+    private bool $isVerified = false;
 
     /**
      * @var Collection<int, Emprunt>
@@ -40,15 +44,15 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Emprunt::class, mappedBy: 'Utilisateur')]
     private Collection $emprunts;
 
-    #[ORM\Column]
-    private bool $isVerified = false;
+    // Champs non mappés (utilisés pour les formulaires uniquement)
+    private ?string $plainPassword = null;
+    private ?string $currentPassword = null;
+    private ?string $confirmPassword = null;
 
     public function __construct()
     {
         $this->emprunts = new ArrayCollection();
     }
-
-    // ----- getters/setters classiques -----
 
     public function getId(): ?int
     {
@@ -102,7 +106,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        $roles[] = 'ROLE_USER'; // garanti au moins ROLE_USER
+        $roles[] = 'ROLE_USER';
         return array_unique($roles);
     }
 
@@ -112,9 +116,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function eraseCredentials():void
+    public function eraseCredentials(): void
     {
-        // Si tu veux effacer des données sensibles temporaires
+        $this->plainPassword = null;
+        $this->currentPassword = null;
+        $this->confirmPassword = null;
     }
 
     public function getUserIdentifier(): string
@@ -122,7 +128,16 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->email;
     }
 
-    // ----- relation Emprunt -----
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
+        return $this;
+    }
 
     /**
      * @return Collection<int, Emprunt>
@@ -153,14 +168,49 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isVerified(): bool
+    /**
+     * @Assert\Length(
+     *     min=6,
+     *     max=4096,
+     *     minMessage="Le mot de passe doit contenir au moins {{ limit }} caractères"
+     * )
+     */
+    public function getPlainPassword(): ?string
     {
-        return $this->isVerified;
+        return $this->plainPassword;
     }
-    
-    public function setIsVerified(bool $isVerified): self
+
+    public function setPlainPassword(?string $plainPassword): self
     {
-        $this->isVerified = $isVerified;
+        $this->plainPassword = $plainPassword;
+        return $this;
+    }
+
+    /**
+     * @Assert\NotBlank(message="Veuillez saisir votre mot de passe actuel.")
+     */
+    public function getCurrentPassword(): ?string
+    {
+        return $this->currentPassword;
+    }
+
+    public function setCurrentPassword(?string $currentPassword): self
+    {
+        $this->currentPassword = $currentPassword;
+        return $this;
+    }
+
+    /**
+     * @Assert\EqualTo(propertyPath="plainPassword", message="Les mots de passe ne correspondent pas.")
+     */
+    public function getConfirmPassword(): ?string
+    {
+        return $this->confirmPassword;
+    }
+
+    public function setConfirmPassword(?string $confirmPassword): self
+    {
+        $this->confirmPassword = $confirmPassword;
         return $this;
     }
 }

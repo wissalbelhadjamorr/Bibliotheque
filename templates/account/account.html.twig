@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Compte{% endblock %}
+
+{% block body %}
+<style>
+    .btn-rose {
+        background-color:#ff007f; /* Rose vif */
+        color: white;
+        border: none;
+    }
+
+    .btn-rose:hover {
+        background-color:#ff007f; /* Rose un peu plus foncé */
+        color: white;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white border-0 pt-4">
+                    <h1 class="h3 mb-0 text-center">Modifier mon profil</h1>
+                </div>
+                <div class="card-body px-4 pb-4 pt-2">
+
+                    {# ✅ MESSAGES FLASH #}
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success">{{ message }}</div>
+                    {% endfor %}
+                    {% for message in app.flashes('error') %}
+                        <div class="alert alert-danger">{{ message }}</div>
+                    {% endfor %}
+
+                    {{ form_start(editForm) }}
+
+                    <div class="mb-3">
+                        {{ form_label(editForm.email) }}
+                        {{ form_widget(editForm.email) }}
+                        {{ form_errors(editForm.email) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(editForm.nom) }}
+                        {{ form_widget(editForm.nom) }}
+                        {{ form_errors(editForm.nom) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(editForm.telephone) }}
+                        {{ form_widget(editForm.telephone) }}
+                        {{ form_errors(editForm.telephone) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(editForm.currentPassword) }}
+                        {{ form_widget(editForm.currentPassword) }}
+                        {{ form_errors(editForm.currentPassword) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(editForm.plainPassword) }}
+                        {{ form_widget(editForm.plainPassword) }}
+                        {{ form_errors(editForm.plainPassword) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(editForm.confirmPassword) }}
+                        {{ form_widget(editForm.confirmPassword) }}
+                        {{ form_errors(editForm.confirmPassword) }}
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-rose">Enregistrer</button>
+                        <a href="{{ path('app_home') }}" class="btn btn-secondary">Annuler</a>
+                    </div>
+
+                    {{ form_end(editForm) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
