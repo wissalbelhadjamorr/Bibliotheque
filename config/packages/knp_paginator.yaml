@@ -1,0 +1,11 @@
+# config/packages/knp_paginator.yaml
+knp_paginator:
+    page_range: 5             # Nombre de pages à afficher dans la pagination
+    default_options:
+        page_name: page       # Nom du paramètre d'URL pour la page
+        sort_field_name: sort # Nom du paramètre pour trier
+        sort_direction_name: direction # Nom du paramètre pour la direction de tri
+        distinct: true         # Evite les doublons
+    template:
+        pagination: '@KnpPaginator/Pagination/sliding.html.twig' # Template par défaut
+        sortable: '@KnpPaginator/Pagination/sortable_link.html.twig' # Template pour les liens de tri

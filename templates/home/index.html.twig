@@ -1,16 +1,53 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Accueil{% endblock %}
 
 {% block body %}
+<div class="container mt-4">
+  <h2>📚 Derniers livres ajoutés</h2>
+  <ul class="list-group mb-4">
+    {% for livre in livres %}
+      <li class="list-group-item">
+        <strong>{{ livre.titre }}</strong> 
+      </li>
+    {% else %}
+      <li class="list-group-item text-muted">Aucun livre trouvé.</li>
+    {% endfor %}
+  </ul>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+  <div class="mb-4 text-end">
+    <a href="{{ path('app_livre_index') }}" class="btn btn-outline-primary">
+      Voir tous les livres
+    </a>
+  </div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/home/wissal/biblioth/src/Controller/HomeController.php</code></li>
-        <li>Your template at <code>/home/wissal/biblioth/templates/home/index.html.twig</code></li>
-    </ul>
+  <h2>🧑‍💼 Auteurs</h2>
+  <ul class="list-group mb-4">
+    {% for auteur in auteurs %}
+      <li class="list-group-item">{{ auteur.nom }}</li>
+    {% else %}
+      <li class="list-group-item text-muted">Aucun auteur trouvé.</li>
+    {% endfor %}
+  </ul>
+   <div class="mb-4 text-end">
+    <a href="{{ path('app_auteur_index') }}" class="btn btn-outline-primary">
+      Voir tous les auteurs
+    </a>
+  </div>
+
+  <h2>🏷️ Genres</h2>
+  <ul class="list-group">
+    {% for genre in genres %}
+      <li class="list-group-item">{{ genre.nom }}</li>
+    {% else %}
+      <li class="list-group-item text-muted">Aucun genre trouvé.</li>
+    {% endfor %}
+
+  </ul>
+     <div class="mb-4 text-end">
+
+      <a href="{{ path('app_genre_index') }}" class="btn btn-outline-primary">
+      Voir tous les genres
+    </a>
 </div>
 {% endblock %}
