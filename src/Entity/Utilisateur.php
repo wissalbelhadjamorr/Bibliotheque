@@ -44,7 +44,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Emprunt::class, mappedBy: 'Utilisateur')]
     private Collection $emprunts;
 
-    // Champs non mappés (utilisés pour les formulaires uniquement)
     private ?string $plainPassword = null;
     private ?string $currentPassword = null;
     private ?string $confirmPassword = null;
@@ -168,13 +167,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @Assert\Length(
-     *     min=6,
-     *     max=4096,
-     *     minMessage="Le mot de passe doit contenir au moins {{ limit }} caractères"
-     * )
-     */
+  
     public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
@@ -186,9 +179,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @Assert\NotBlank(message="Veuillez saisir votre mot de passe actuel.")
-     */
+  
     public function getCurrentPassword(): ?string
     {
         return $this->currentPassword;

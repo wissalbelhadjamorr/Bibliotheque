@@ -31,7 +31,20 @@ security:
                 # Redirection après la déconnexion (facultatif)
                 # target: app_any_route
 
+
     access_control:
         - { path: ^/login$, roles: PUBLIC_ACCESS }
         - { path: ^/inscription$, roles: PUBLIC_ACCESS }
+
+        - { path: ^/livre/new, roles: ROLE_ADMIN }
+        - { path: ^/livre/edit, roles: ROLE_ADMIN }
+        - { path: ^/livre/delete, roles: ROLE_ADMIN }
+
+        - { path: ^/auteur/new, roles: ROLE_ADMIN }
+        - { path: ^/auteur/edit, roles: ROLE_ADMIN }
+        - { path: ^/auteur/delete, roles: ROLE_ADMIN }
+        - { path: ^/genre/new, roles: ROLE_ADMIN }
+        - { path: ^/genre/edit, roles: ROLE_ADMIN }
+        - { path: ^/genre/delete, roles: ROLE_ADMIN }
+
         - { path: ^/, roles: ROLE_USER }

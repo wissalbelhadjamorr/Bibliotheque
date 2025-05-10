@@ -3,16 +3,16 @@
 {% block title %}Auteur index{% endblock %}
 
 {% block body %}
-    <h1>Auteur index</h1>
+    <h1 class="my-4">Auteur Index</h1>
 
-    <table class="table">
-        <thead>
+    <table class="table table-hover table-striped">
+        <thead class="table-dark">
             <tr>
                 <th>Id</th>
                 <th>Nom</th>
                 <th>Biographie</th>
-                <th>DateDeNaissance</th>
-                <th>actions</th>
+                <th>Date de Naissance</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -23,17 +23,23 @@
                 <td>{{ auteur.biographie }}</td>
                 <td>{{ auteur.dateDeNaissance ? auteur.dateDeNaissance|date('Y-m-d') : '' }}</td>
                 <td>
-                    <a href="{{ path('app_auteur_show', {'id': auteur.id}) }}">show</a>
-                    <a href="{{ path('app_auteur_edit', {'id': auteur.id}) }}">edit</a>
+                    <a href="{{ path('app_auteur_show', {'id': auteur.id}) }}" class="btn btn-info btn-sm">Voir</a>
+
+                    
+                    {% if is_granted('ROLE_ADMIN') %}
+
+                    <a href="{{ path('app_auteur_edit', {'id': auteur.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                    {% endif %}
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="5">no records found</td>
+                <td colspan="5" class="text-center">No records found</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_auteur_new') }}">Create new</a>
+{% if is_granted('ROLE_ADMIN') %}
+    <a href="{{ path('app_auteur_new') }}" class="btn btn-success mt-3">Ajouter un auteur</a>
+{% endif %}
 {% endblock %}
